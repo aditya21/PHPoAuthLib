@@ -11,19 +11,17 @@ use OAuth\Common\Storage\TokenStorageInterface;
 use OAuth\Common\Http\Uri\UriInterface;
 
 /**
- * Amazon service.
+ * Slack service.
  *
- * @author Flávio Heleno <flaviohbatista@gmail.com>
- * @link https://images-na.ssl-images-amazon.com/images/G/01/lwa/dev/docs/website-developer-guide._TTH_.pdf
+ * @author Antoine Corcy <contact@sbin.dk>
  */
-class Amazon extends AbstractService
+class Slack extends AbstractService
 {
     /**
      * Defined scopes
-     * @link https://images-na.ssl-images-amazon.com/images/G/01/lwa/dev/docs/website-developer-guide._TTH_.pdf
+     * @link https://api.slack.com/docs/oauth-scopes
      */
-    const SCOPE_PROFILE     = 'profile';
-    const SCOPE_POSTAL_CODE = 'postal_code';
+    const SCOPE_USERS = 'users:read';
 
     public function __construct(
         CredentialsInterface $credentials,
@@ -32,10 +30,10 @@ class Amazon extends AbstractService
         $scopes = array(),
         UriInterface $baseApiUri = null
     ) {
-        parent::__construct($credentials, $httpClient, $storage, $scopes, $baseApiUri);
+        parent::__construct($credentials, $httpClient, $storage, $scopes, $baseApiUri, true);
 
         if (null === $baseApiUri) {
-            $this->baseApiUri = new Uri('https://api.amazon.com/');
+            $this->baseApiUri = new Uri('https://slack.com/api/');
         }
     }
 
@@ -44,7 +42,7 @@ class Amazon extends AbstractService
      */
     public function getAuthorizationEndpoint()
     {
-        return new Uri('https://www.amazon.com/ap/oa');
+        return new Uri('https://slack.com/oauth/authorize');
     }
 
     /**
@@ -52,7 +50,7 @@ class Amazon extends AbstractService
      */
     public function getAccessTokenEndpoint()
     {
-        return new Uri('https://www.amazon.com/ap/oatoken');
+        return new Uri('https://slack.com/api/oauth.access');
     }
 
     /**
@@ -72,23 +70,14 @@ class Amazon extends AbstractService
 
         if (null === $data || !is_array($data)) {
             throw new TokenResponseException('Unable to parse response.');
-        } elseif (isset($data['error_description'])) {
-            throw new TokenResponseException('Error in retrieving token: "' . $data['error_description'] . '"');
         } elseif (isset($data['error'])) {
             throw new TokenResponseException('Error in retrieving token: "' . $data['error'] . '"');
         }
 
         $token = new StdOAuth2Token();
         $token->setAccessToken($data['access_token']);
-        $token->setLifeTime($data['expires_in']);
-
-        if (isset($data['refresh_token'])) {
-            $token->setRefreshToken($data['refresh_token']);
-            unset($data['refresh_token']);
-        }
 
         unset($data['access_token']);
-        unset($data['expires_in']);
 
         $token->setExtraParams($data);
 

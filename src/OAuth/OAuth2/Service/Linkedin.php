@@ -28,10 +28,10 @@ class Linkedin extends AbstractService
     const SCOPE_R_NETWORK           = 'r_network';
     const SCOPE_R_CONTACTINFO       = 'r_contactinfo';
     const SCOPE_RW_NUS              = 'rw_nus';
-    const SCOPE_RW_COMPANY_ADMIN    = 'rw_company_admin';
+    // const SCOPE_RW_COMPANY_ADMIN    = 'rw_company_admin';
     const SCOPE_RW_GROUPS           = 'rw_groups';
     const SCOPE_W_MESSAGES          = 'w_messages';
-    const SCOPE_W_SHARE             = 'w_share';
+    // const SCOPE_W_SHARE             = 'w_share';
 
     public function __construct(
         CredentialsInterface $credentials,
@@ -90,11 +90,11 @@ class Linkedin extends AbstractService
 
         if (isset($data['refresh_token'])) {
             $token->setRefreshToken($data['refresh_token']);
-            unset($data['refresh_token']);
+            //unset($data['refresh_token']);
         }
 
         unset($data['access_token']);
-        unset($data['expires_in']);
+        //unset($data['expires_in']);
 
         $token->setExtraParams($data);
 

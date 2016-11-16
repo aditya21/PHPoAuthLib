@@ -35,7 +35,6 @@ class Google extends AbstractService
     const SCOPE_GPLUS_STREAM_READ           = 'https://www.googleapis.com/auth/plus.stream.read';
     const SCOPE_GPLUS_STREAM_WRITE          = 'https://www.googleapis.com/auth/plus.stream.write';
     const SCOPE_GPLUS_MEDIA                 = 'https://www.googleapis.com/auth/plus.media.upload';
-    const SCOPE_EMAIL_PLUS                  = 'https://www.googleapis.com/auth/plus.profile.emails.read';
 
     // Google Drive
     const SCOPE_DOCUMENTSLIST               = 'https://docs.google.com/feeds/';
@@ -50,8 +49,7 @@ class Google extends AbstractService
 
     // Adwords
     const SCOPE_ADSENSE                     = 'https://www.googleapis.com/auth/adsense';
-    const SCOPE_ADWORDS                     = 'https://www.googleapis.com/auth/adwords';
-    const SCOPE_ADWORDS_DEPRECATED          = 'https://www.googleapis.com/auth/adwords/'; //deprecated in v201406 API version
+    const SCOPE_ADWORDS                     = 'https://www.googleapis.com/auth/adwords/';
     const SCOPE_GAN                         = 'https://www.googleapis.com/auth/gan'; // google affiliate network...?
 
     //Doubleclick for Publishers
@@ -184,14 +182,14 @@ class Google extends AbstractService
         $token = new StdOAuth2Token();
         $token->setAccessToken($data['access_token']);
         $token->setLifetime($data['expires_in']);
-
+        
         if (isset($data['refresh_token'])) {
             $token->setRefreshToken($data['refresh_token']);
-            unset($data['refresh_token']);
+            //unset($data['refresh_token']);
         }
 
-        unset($data['access_token']);
-        unset($data['expires_in']);
+        //unset($data['access_token']);
+        //unset($data['expires_in']);
 
         $token->setExtraParams($data);
 
